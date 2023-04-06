@@ -13,18 +13,20 @@ export default class Dot {
     this.ctx = this.createCtx();
     this.ctx.drawImage(image, 0, 0);
   }
-  convert() {
-    for (let x = 0; x < this.width; x += this.dotSize) {
-      for (let y = 0; y < this.height; y += this.dotSize) {
-        this.mixColor(x, y, this.dotSize);
-        console.log(x,y)
+  async convert():Promise<HTMLImageElement> {
+    return new Promise((res) => {
+      for (let x = 0; x < this.width; x += this.dotSize) {
+        for (let y = 0; y < this.height; y += this.dotSize) {
+          this.mixColor(x, y, this.dotSize);
+          console.log(x, y);
+        }
       }
-    }
-    const img = new Image();
-    img.src = this.ctx.canvas.toDataURL("image/jpeg", 0.75);
-    img.width = this.ctx.canvas.width
-    img.height = this.ctx.canvas.height;
-    return img;
+      const img = new Image();
+      img.src = this.ctx.canvas.toDataURL("image/jpeg", 0.75);
+      img.width = this.ctx.canvas.width;
+      img.height = this.ctx.canvas.height;
+      res(img);
+    });
   }
 
   private mixColor(x: number, y: number, size: number) {
@@ -38,16 +40,16 @@ export default class Dot {
 
   private getAverageOf(arr: Uint8ClampedArray): color {
     //return [arr[0], arr[1], arr[2]];
-    const sum = [0,0,0]
-    for (let i = 0; i < arr.length; i += 4){
-      sum[0] = arr[i + 0]
+    const sum = [0, 0, 0];
+    for (let i = 0; i < arr.length; i += 4) {
+      sum[0] = arr[i + 0];
       sum[1] = arr[i + 1];
       sum[2] = arr[i + 2];
     }
     sum[0] /= arr.length;
     sum[1] /= arr.length;
     sum[2] /= arr.length;
-    return [arr[0],arr[1],arr[2]];
+    return [arr[0], arr[1], arr[2]];
   }
 
   private paintColor(size: number, color: color) {
