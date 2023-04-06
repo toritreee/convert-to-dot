@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useRef, useState } from 'react'
+
+import Dot from './dot'
+import InputFile from './InputFile'
+import fileToImage from './fileToImage'
+import Preview from './Preview'
+import ViewConfig, { config } from './Config'
+
+function useApp() {
+  const [file,setFile] = useState<File>()
+  const [image,setImage] = useState<HTMLImageElement>()
+  const [config, setConfig] = useState<config>({dotRoughness: 10})
+
+  useEffect(() => {
+    if(file==null)return
+    fileToImage(file).then((v) => {
+      setImage(v)
+    })
+  },[file])
+  return {
+    setFile,
+    inputImage: image,
+    outputImage: image//config.dotRoughness, image.width, image.height
+      ? new Dot(image, config.dotRoughness, image.width, image.height).convert()
+      : undefined,
+    config,
+    setConfig
+  }
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+  const {setFile,inputImage,outputImage,config,setConfig} = useApp()
+  return <main>
+    <InputFile setFile={setFile} />
+    {inputImage ? <Preview image={inputImage} /> : undefined}
+    {outputImage ? <Preview image={outputImage} /> : undefined}
+    <ViewConfig config={config} setConfig={setConfig}/>
+  </main>
 }
 
 export default App
