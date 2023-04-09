@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import Dot from './dot'
 import InputFile from './InputFile'
 import fileToImage from './fileToImage'
 import Preview from './Preview'
 import ViewConfig, { config } from './Config'
+import { DotWorker } from './worker/client'
 
 function useApp() {
   const [file,setFile] = useState<File>()
@@ -14,11 +14,9 @@ function useApp() {
   const remake = useCallback(() => {
     if (image) {
       console.log("k",image)
-      new Dot(image, config.dotRoughness, image.width, image.height).convert()
-        .then((v) => {
-          console.log("o",v)
-          setOutputImage(v)
-        })
+      new DotWorker(image, config.dotRoughness).convert().then(v => {
+        setOutputImage(v.image)
+      })
     }
   },[image,config])
 

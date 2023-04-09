@@ -3,17 +3,18 @@ type color = number[]
  * 画像を一定の大きさの領域で区切り、その中の平均を出す
  */
 export default class Dot {
-  private ctx: CanvasRenderingContext2D;
+  private ctx: OffscreenCanvasRenderingContext2D;
+  private width: number
+  private height: number
   constructor(
-    image: CanvasImageSource,
+    canvas: OffscreenCanvas,
     private dotSize: number,
-    private width: number,
-    private height: number
   ) {
-    this.ctx = this.createCtx();
-    this.ctx.drawImage(image, 0, 0);
+    this.ctx = this.createCtx(canvas);
+    this.width = canvas.width
+    this.height = canvas.height
   }
-  async convert():Promise<HTMLImageElement> {
+  async convert(): Promise<Blob> {
     return new Promise((res) => {
       for (let x = 0; x < this.width; x += this.dotSize) {
         for (let y = 0; y < this.height; y += this.dotSize) {
@@ -21,11 +22,9 @@ export default class Dot {
           console.log(x, y);
         }
       }
-      const img = new Image();
-      img.src = this.ctx.canvas.toDataURL("image/jpeg", 0.75);
-      img.width = this.ctx.canvas.width;
-      img.height = this.ctx.canvas.height;
-      res(img);
+      this.ctx.canvas.convertToBlob({"type":"image/jpeg","quality":0.7}).then(v => {
+        res(v)
+      })
     });
   }
 
@@ -63,11 +62,8 @@ export default class Dot {
     return image;
   }
 
-  private createCtx() {
-    const canvas = document.createElement("canvas");
-    canvas.width = this.width;
-    canvas.height = this.height;
-    const ctx = canvas.getContext("2d");
+  private createCtx(canvas: OffscreenCanvas) {
+    const ctx = canvas.getContext("2d", { willReadFrequently:true});
     if (ctx == null) throw new Error("???");
     return ctx;
   }
