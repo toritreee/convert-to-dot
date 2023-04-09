@@ -43,8 +43,6 @@ function useApp() {
 
 function App() {
   const { setFile, inputImage, outputImage, config, setConfig, remake } = useApp()
-
-  console.log("render",outputImage)
   return <main>
     <InputFile setFile={setFile} />
     {inputImage ? <Preview image={inputImage} /> : undefined}
