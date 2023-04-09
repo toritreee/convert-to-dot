@@ -9,6 +9,7 @@ export default class Dot {
   constructor(
     canvas: OffscreenCanvas,
     private dotSize: number,
+    private img: HTMLImageElement
   ) {
     this.ctx = this.createCtx(canvas);
     this.width = canvas.width
@@ -63,8 +64,9 @@ export default class Dot {
   }
 
   private createCtx(canvas: OffscreenCanvas) {
-    const ctx = canvas.getContext("2d", { willReadFrequently:true});
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (ctx == null) throw new Error("???");
+    ctx.drawImage(this.img,0,0)
     return ctx;
   }
 }

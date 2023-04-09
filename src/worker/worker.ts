@@ -2,9 +2,9 @@ import Dot from "../dot";
 
 addEventListener(
   "message",
-  (ev: MessageEvent<{ ctx: OffscreenCanvasRenderingContext2D, dotSize: number }>) => {
-    const {ctx,dotSize} = ev.data
-    new Dot(ctx, dotSize).convert().then(v => {
+  (ev: MessageEvent<{ canvas: OffscreenCanvas, dotSize: number, image: HTMLImageElement }>) => {
+    const {canvas,dotSize,image} = ev.data
+    new Dot(canvas, dotSize,image).convert().then(v => {
       self.postMessage(v)
     })
   }
