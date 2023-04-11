@@ -7,7 +7,7 @@ export default class Dot {
   private width: number
   private height: number
   constructor(
-    canvas: OffscreenCanvas,
+    private canvas: OffscreenCanvas,
     private dotSize: number,
     private img: HTMLImageElement
   ) {
@@ -20,10 +20,9 @@ export default class Dot {
       for (let x = 0; x < this.width; x += this.dotSize) {
         for (let y = 0; y < this.height; y += this.dotSize) {
           this.mixColor(x, y, this.dotSize);
-          console.log(x, y);
         }
       }
-      this.ctx.canvas.convertToBlob({"type":"image/jpeg","quality":0.7}).then(v => {
+      this.canvas.convertToBlob({"type":"image/jpeg","quality":0.7}).then(v => {
         res(v)
       })
     });
@@ -63,7 +62,7 @@ export default class Dot {
     return image;
   }
 
-  private createCtx(canvas: OffscreenCanvas) {
+  private createCtx(canvas: OffscreenCanvas):OffscreenCanvasRenderingContext2D {
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (ctx == null) throw new Error("???");
     ctx.drawImage(this.img,0,0)

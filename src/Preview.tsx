@@ -14,7 +14,7 @@ function usePreview(image: CanvasImageSource) {
 }
 export default function Preview({ image }: { image: HTMLImageElement }) {
   //const canvas = usePreview(image)//<canvas ref={canvas} width={Number(image.width)} height={Number(image.height)}></canvas>
-  return <div>
-    <img src={image.src} alt="" style={{ width: "100vmin" }} />
+  return <div className="w-full">
+    <img src={image.src} alt="" className="w-full" />
   </div>
 }
