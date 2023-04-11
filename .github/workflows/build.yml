@@ -39,6 +39,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+        with:
+          version: 8.2.0
       - name: Build
         run: pnpm run build
       - name: Setup Pages
