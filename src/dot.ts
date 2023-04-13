@@ -15,12 +15,13 @@ export default class Dot {
     this.width = canvas.width
     this.height = canvas.height
   }
-  async convert(): Promise<Blob> {
+  async convert(load:(pars:number)=>void): Promise<Blob> {
     return new Promise((res) => {
       for (let x = 0; x < this.width; x += this.dotSize) {
         for (let y = 0; y < this.height; y += this.dotSize) {
           this.mixColor(x, y, this.dotSize);
         }
+        load(x/this.width)
       }
       this.canvas.convertToBlob({"type":"image/jpeg","quality":0.7}).then(v => {
         res(v)

@@ -39,7 +39,7 @@ export function Loading({ pars }: { pars: number }) {
       </div>
       <span className="inline-block text-center">
         <span className="inline opacity-0 select-none">{Array(Number(count % 5)).join(".")}</span>
-        {pars}% finish{Array(Number(count % 5)).join(".")}
+        {("000"+Math.floor(pars*100)).slice(-3)}% finish{Array(Number(count % 5)).join(".")}
       </span>
     </div>
   </div>

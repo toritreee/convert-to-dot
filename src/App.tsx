@@ -19,9 +19,9 @@ function useApp() {
 
   const [config, setConfig] = useState<config>({ dotRoughness: 10 });
   const remake = useCallback(() => {
-    if (inputImage) {
-      setOutputImage(10)
-      new DotWorker(inputImage, config.dotRoughness).convert().then((v) => {
+    if (inputImage && outputImage === undefined) {
+      setOutputImage(0.01)
+      new DotWorker(inputImage, config.dotRoughness).convert(setOutputImage).then((v) => {
         setOutputImage(v.image);
       });
     }
@@ -66,11 +66,11 @@ function App() {
           <div className="grid grid-rows-3 grid-cols-1 md:grid-rows-1 md:grid-cols-3 w-auto">
             {inputImage && <Preview image={inputImage} />}
             <ViewConfig config={config} setConfig={setConfig} />
-            {outputImage
-              ? typeof outputImage === "number"
-                ? <Loading pars={outputImage}/>
-                : (<Preview image={outputImage} />)
-              : (<button onClick={remake}>変換</button>)
+            {typeof outputImage === "number"
+              ? <Loading pars={outputImage} />
+              : outputImage
+                ? (<Preview image={outputImage} />)
+                : (<button onClick={remake}>変換</button>)
             }
           </div>
         }
